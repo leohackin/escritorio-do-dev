@@ -4,8 +4,9 @@ Uma simulação ao vivo do escritório do **Dev**, das tirinhas [@vidadodev](htt
 
 - O relógio é o **horário de Brasília** (America/Sao_Paulo), independente do fuso de quem abre.
 - A agenda de cada dia é gerada de forma **determinística**: a semente é a data, então todo mundo vê o mesmo dia ao mesmo tempo, e cada data é diferente.
-- Tudo é desenhado em SVG com código, sem nenhuma imagem: traço de caneta tremido, preto no branco.
-- As únicas cores são o post-it amarelo (o **Prompt**) e a caneca azul-acinzentada do Dev.
+- **v2:** planta isométrica grande (cozinha completa, banheiro fechado, open space com 12 estações, sala de reunião de vidro, lounge com sofá/TV/videogame/pufes, recepção e entrada), desenhada como tirinha de jornal: contorno preto firme, branco, pontilhado leve, sem sombra. Os bonecos são sprites (PNG transparente) que andam por corredores e portas com A*, somem no banheiro e saem pela porta da frente.
+- **Regra de cor:** tudo preto e branco, exceto o post-it amarelo (o **Prompt**, com carinha, só no monitor do Dev) e a caneca azul-acinzentada do Dev. O Dev é o único de camiseta preta "DE BOA".
+- A v1 (tudo em SVG feito por código) está guardada na tag git `v1`.
 
 ## Rodar local
 
@@ -32,7 +33,9 @@ Não tem bundler: é HTML/CSS/JS estático com ES modules. Só precisa de um ser
 Exemplos:
 - `?dia=sex&hora=17:55` é o deployzin de sexta.
 - `?data=2026-10-02&hora=19:30` é um happy hour.
-- `?hora=23:00` mostra o escritório escuro.
+- `?hora=23:00` mostra o escritório escuro (só o post-it brilha; a janela muda com a hora).
+- `?data=2026-10-20&hora=12:45` é o almoço da turma na mesa da cozinha; `?data=2026-10-21&hora=13:30`, o videogame no sofá.
+- No celular a planta fica maior e dá para arrastar; abre centrada no Dev.
 - `?dia=sab&hora=09:30` mostra a faxina de sábado.
 
 No console, `window.escritorio` expõe `agenda()`, `gerarAgenda('2026-10-30')`, `atualizarBanco()` e `checarVersao()`.
@@ -76,8 +79,9 @@ Cada ação aceita estes campos:
 | `chance` | probabilidade de acontecer no dia (recheio) |
 | `maxPorDia`, `intervaloMin` | repetições e espaço mínimo entre elas |
 | `prioridade` | quanto maior, mais cedo é encaixado; ≥5 entra antes da saída/almoço |
-| `local` | `mesa`, `mesa:<id>`, `teclado:<id>`, `copa`, `porta`, `fora`, `reuniao`, `janela`, `centro` |
-| `pose` | `digitando`, `digitando-rapido`, `olhando`, `comendo`, `dormindo`, `em-pe`, `falando`, `cafe`, `brindando`, `ofegante`, `varrendo`, `celebrando` |
+| `local` | `mesa`, `mesa:<id>` (em pé ao lado da mesa), `teclado:<id>`, `fora`/`porta` (sai pela entrada e some), `banheiro` (entra e some), `banheiro-fila`, `recepcao`, `copa` (em pé na cozinha), `cafeteira`, `micro-ondas` (fila), `geladeira`, `pia`, `mesa-cozinha` (sentado à mesa de jantar), `sofa` (2 no sofá + 2 em pé; a TV mostra o jogo se o id da ação tiver `videogame`), `reuniao`, `janela`, `centro`, `corredor` |
+| `slot` | (em etapas) qual ponto do local usar; grupos simultâneos no mesmo local são afastados automaticamente |
+| `pose` | `digitando`, `digitando-rapido`, `olhando`, `comendo`, `dormindo`, `em-pe`, `falando`, `cafe`, `brindando`, `ofegante`, `varrendo`, `extintor`, `preocupada`, `prancheta`, `celebrando`. Se o personagem não tem o sprite da pose, usa `em-pe` |
 | `props` | `caneca`, `copo`, `garfo`, `vassoura`, `prancheta`, `caneta`, `mochila`, `marmita`, `sacola` |
 | `status` | texto do indicador; `{n}` vira o número da repetição (o "4º café") |
 | `envolvidos` | outras pessoas: `[{ "quem": "gerente", "local": "mesa:dev", "pose": "falando" }]`. Aceita `colega` e `colegas` |
@@ -92,7 +96,12 @@ Cada ação aceita estes campos:
 
 Para **adicionar uma ação**, copie uma parecida em `data/acoes.json`, troque o `id` e pronto. Rode `npm test` para conferir. As páginas que já estão abertas pegam a ação nova em até ~30 min, sem reload (veja abaixo).
 
-`data/cenario.json` guarda a posição das mesas e dos locais e a regra da luz (`acesaAte`, `minimoPessoasDepois`).
+`data/cenario.json` (coordenadas no espaço da arte, 2560×1440) guarda:
+- `mesas[i].cadeira` (onde o boneco senta), e na mesa do Dev `tela`, `teclado`, `caneca`, `postit` (quadriláteros/pontos onde o código desenha monitor, caneca e post-it);
+- `locais.<nome>.pontos` (`x`, `y`, `olhar`, `tipo`: `em-pe` | `costas` (sentado de costas, corte do sprite) | `frente` (sentado de frente comendo), `prof` = profundidade para oclusão), `acesso`/`trilho` (passos fixos antes de chegar, ex.: passar pela porta), `sumir`;
+- `janela`, `relogio`, `portas`, `tv`: onde a janela muda com a hora, os ponteiros e as portas abertas são desenhados;
+- `escalaBoneco`, `velocidade` (px/s), `luz`;
+- `arte`: sementes usadas por `arte/ferramentas/cenario.py` para gerar `profundidade.png` (oclusão) e `andavel.png` (chão andável do A*).
 
 ## Rodando indefinidamente (descanso de tela)
 
@@ -111,7 +120,7 @@ A página foi feita para ficar aberta por dias:
    - Em qualquer caso, recarrega **no máximo 3 h** depois de detectar a versão nova.
 5. **Sem vazamento.**
    - Há um único `setInterval` de 60 s para manutenção (banco, versão, reload) e um único loop rAF limitado a ~30 fps.
-   - Os bonecos e os balões são criados uma vez e reaproveitados (pool por personagem). O DOM só é tocado quando um valor muda.
+   - A cena é um único `<canvas>` redesenhado a ~30 fps só quando alguém anda/fala (senão, 4 fps). Os balões (SVG) são reaproveitados por personagem; rotas A* ficam em cache e o cache é limpo a cada dia.
    - Os fetches têm timeout de 15 s e há trava contra execução simultânea.
    - Teste: a contagem de elementos ficou estável (~1100–1150) atravessando 12 h simuladas.
    - Erros num quadro são logados no máximo 1x/min e não derrubam o loop.
@@ -129,11 +138,32 @@ Antes de publicar, rode `npm run build` para gerar o `version.json`. Num build d
 
 ```
 index.html  css/style.css  fonts/PatrickHand.ttf
-js/main.js      loop, posições, balões, luz, HUD, atualização/versão
-js/agenda.js    PRNG (mulberry32) + gerador determinístico + mescla
+js/main.js      loop, rotas, poses, balões, luz, HUD, atualização/versão, pan no celular
+js/cena.js      carrega arte + sprites, A* no andavel.png, desenho com oclusão por profundidade
+js/enfeites.js  relógio, janela por hora, post-it, caneca, monitor, fumaça, jogo na TV
+js/agenda.js    PRNG (mulberry32) + gerador determinístico + mescla (sem DOM)
 js/relogio.js   hora de Brasília + parâmetros da URL
-js/cenario.js   escritório em SVG       js/boneco.js  bonecos + poses
-js/traco.js     traço tremido de caneta
+assets/         cenario.webp, profundidade.png, andavel.png, sprites/<id>/<pose>.png + indice.json
 data/*.json     elenco, ações, cenário
+arte/           folhas brutas geradas, prompts e ferramentas que produzem assets/
 scripts/        gerar-versao, testar-agenda, screenshots
 ```
+
+## Como gerar a arte
+
+Tudo que está em `assets/` sai de `arte/` com scripts reprodutíveis (Python 3 com `opencv-python-headless numpy scipy pillow`):
+
+```bash
+python3 -m venv .venv-arte && .venv-arte/bin/pip install opencv-python-headless numpy scipy pillow
+```
+
+1. **Prompts** ficam em `arte/prompts/`:
+   - `estilo-base.txt`: estilo comum (tirinha de jornal, contorno firme, branco, pontilhado leve, sem sombra/cinza/cor, **sem texto nem placas**).
+   - `cenario.txt`: a planta isométrica com todas as salas (use a imagem de referência de layout só para layout/estilo).
+   - `sprite-base.txt` + `folha-sprites.txt`: folha de sprites de um personagem (mesma escala e ângulo, fundo branco liso, poses separadas). Sempre anexe a tirinha de referência do personagem (cores: só o Dev de camiseta preta "DE BOA").
+   Gere no gerador de imagem de sua preferência e salve em `arte/bruto/` (`<id>-a.jpg`, `cenario-b.jpg`…).
+2. **Cenário:** `cd arte/ferramentas && python cenario.py` limpa a folha (tinta preta pura), apaga o que o código desenha (ponteiros do relógio etc., `arte.apagar`) e gera `assets/cenario.webp`, `profundidade.png` e `andavel.png` usando as sementes de `data/cenario.json → arte`. Ele também grava `/tmp/cenario-debug.png` para conferir.
+3. **Sprites:** `python recortar.py ../bruto/dev-a.jpg /tmp/rec-dev` numera os recortes da folha (veja `contato.png`); mapeie número → pose em `arte/sprites.json` (`ref`/`alvo` controlam a escala, `corteTopo` faz o sprite de sofá, `tingir` pinta a caneca, `engrossar` engrossa o traço para combinar com o cenário). Depois `python montar.py` (também em `arte/ferramentas`) grava `assets/sprites/<id>/<pose>.png` (fundo transparente, sem halo) e `indice.json` (tamanho e ponto do pé).
+4. Ajuste `escalaBoneco` e os pontos em `data/cenario.json`, e confira com `scripts/screenshots.py`.
+
+Nomes de pose que o código procura: `em-pe`, `andar-frente-1/2`, `andar-costas-1/2`, `correndo-1/2`, `sentado-costas` (digitando, de costas na cadeira), `digitando-rapido`, `dormindo`, `sofa`, `comendo`, `falando`, `cafe`, `brinde`, `ofegante`, `varrendo`, `extintor`, `preocupada`, `sentado-prancheta`, `voando-1/2` (pombo).

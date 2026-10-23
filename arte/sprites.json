@@ -1,0 +1,216 @@
+{
+ "_doc": "Mapa folha bruta -> sprite final. idx = número do recorte (veja recortar.py). ref = recorte usado pra escala; alvo = altura final em px do ref (ou 'id/pose' pra copiar a altura de outro sprite). corteTopo = guarda só a fração de cima (ex.: sofá). tingir = [[x,y], cor] flood-fill na folha (caneca do Dev).",
+ "alturaEmPe": 200,
+ "folhas": {
+  "dev-a": {
+   "ref": 2,
+   "poses": {
+    "dev/andar-frente-1": 0,
+    "dev/andar-frente-2": 1,
+    "dev/em-pe": 2,
+    "dev/cafe": {
+     "idx": 4,
+     "tingir": [
+      [
+       1087,
+       115
+      ],
+      [
+       143,
+       160,
+       178
+      ]
+     ]
+    },
+    "dev/andar-costas-1": 5,
+    "dev/andar-costas-2": 6,
+    "dev/sentado-costas": 7,
+    "dev/comendo": 8,
+    "dev/sofa": {
+     "idx": 5,
+     "corteTopo": 0.42
+    }
+   }
+  },
+  "dev-b": {
+   "ref": 3,
+   "poses": {
+    "dev/correndo-1": 0,
+    "dev/correndo-2": 1,
+    "dev/brinde": 3,
+    "dev/dormindo": 4,
+    "dev/extintor": 5,
+    "dev/digitando-rapido": 6
+   }
+  },
+  "gerente-a": {
+   "ref": 2,
+   "poses": {
+    "gerente/andar-frente-1": 0,
+    "gerente/andar-frente-2": 1,
+    "gerente/em-pe": 2,
+    "gerente/falando": 3,
+    "gerente/brinde": 9
+   }
+  },
+  "gerente-b": {
+   "ref": 0,
+   "alvo": "gerente/em-pe",
+   "poses": {
+    "gerente/cafe": 0,
+    "gerente/andar-costas-1": 1,
+    "gerente/andar-costas-2": 2,
+    "gerente/sofa": {
+     "idx": 1,
+     "corteTopo": 0.42
+    }
+   }
+  },
+  "gerente-c": {
+   "ref": 0,
+   "alvo": "dev/sentado-costas",
+   "poses": {
+    "gerente/sentado-costas": 0,
+    "gerente/comendo": 1
+   }
+  },
+  "bia-a": {
+   "ref": 2,
+   "poses": {
+    "bia/andar-frente-1": 0,
+    "bia/andar-frente-2": 1,
+    "bia/em-pe": 2,
+    "bia/falando": 3,
+    "bia/cafe": 4,
+    "bia/andar-costas-1": 5,
+    "bia/andar-costas-2": 6,
+    "bia/sentado-costas": 7,
+    "bia/comendo": 8,
+    "bia/brinde": 9,
+    "bia/sofa": {
+     "idx": 5,
+     "corteTopo": 0.42
+    }
+   }
+  },
+  "carla-a": {
+   "ref": 2,
+   "poses": {
+    "carla/andar-frente-1": 0,
+    "carla/andar-frente-2": 1,
+    "carla/em-pe": 2,
+    "carla/falando": 3,
+    "carla/cafe": 4,
+    "carla/andar-costas-1": 5,
+    "carla/andar-costas-2": 6,
+    "carla/comendo": 8,
+    "carla/brinde": 9,
+    "carla/sofa": {
+     "idx": 5,
+     "corteTopo": 0.42
+    }
+   }
+  },
+  "carla-b": {
+   "ref": 3,
+   "alvo": "carla/em-pe",
+   "poses": {
+    "carla/sentado-costas": 0,
+    "carla/sentado-prancheta": 1,
+    "carla/preocupada": 3
+   }
+  },
+  "kaique-a": {
+   "ref": 2,
+   "poses": {
+    "kaique/andar-frente-1": 0,
+    "kaique/andar-frente-2": 1,
+    "kaique/em-pe": 2,
+    "kaique/falando": 3,
+    "kaique/cafe": 4,
+    "kaique/andar-costas-1": 5,
+    "kaique/andar-costas-2": 6,
+    "kaique/sentado-costas": 7,
+    "kaique/comendo": 8,
+    "kaique/brinde": 9,
+    "kaique/sofa": {
+     "idx": 5,
+     "corteTopo": 0.42
+    }
+   }
+  },
+  "jorge-a": {
+   "ref": 2,
+   "poses": {
+    "jorge/andar-frente-1": 0,
+    "jorge/andar-frente-2": 1,
+    "jorge/em-pe": 2,
+    "jorge/falando": 3,
+    "jorge/cafe": 4,
+    "jorge/andar-costas-1": 5,
+    "jorge/andar-costas-2": 6,
+    "jorge/sentado-costas": 7,
+    "jorge/comendo": 8,
+    "jorge/brinde": 9,
+    "jorge/sofa": {
+     "idx": 5,
+     "corteTopo": 0.42
+    }
+   }
+  },
+  "entregador-a": {
+   "ref": 3,
+   "poses": {
+    "entregador/andar-frente-1": 0,
+    "entregador/andar-frente-2": 1,
+    "entregador/andar-costas-1": 2,
+    "entregador/em-pe": 3
+   }
+  },
+  "recrutador-a": {
+   "ref": 3,
+   "poses": {
+    "recrutador/andar-frente-1": 0,
+    "recrutador/andar-frente-2": 1,
+    "recrutador/andar-costas-1": 2,
+    "recrutador/em-pe": 3
+   }
+  },
+  "visitantes-a": {
+   "dil": 9,
+   "ref": 9,
+   "poses": {
+    "faxineiro/andar-frente-1": 9,
+    "faxineiro/andar-frente-2": 10,
+    "faxineiro/andar-costas-1": 11,
+    "faxineiro/varrendo": 12,
+    "faxineiro/em-pe": 9
+   }
+  },
+  "bichos-a": {
+   "ref": 0,
+   "alvo": 55,
+   "poses": {
+    "pato/em-pe": 0,
+    "pato/oculos": 1,
+    "pombo/andar-frente-1": {
+     "idx": 2,
+     "altura": 62
+    },
+    "pombo/andar-frente-2": {
+     "idx": 3,
+     "altura": 62
+    },
+    "pombo/em-pe": {
+     "idx": 4,
+     "altura": 62
+    },
+    "pombo/voando": {
+     "idx": 5,
+     "altura": 75
+    }
+   }
+  }
+ },
+ "engrossar": 4
+}
