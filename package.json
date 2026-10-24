@@ -1,1 +1,14 @@
-{"type":"module","name":"escritorio-do-dev","private":true,"scripts":{"build":"node scripts/gerar-versao.mjs","test":"node scripts/testar-agenda.mjs","dev":"node scripts/gerar-versao.mjs && python3 -m http.server 8080"}}
+{
+  "type": "module",
+  "name": "escritorio-do-dev",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/gerar-versao.mjs",
+    "test": "node scripts/testar-agenda.mjs && node scripts/testar-caminho.mjs",
+    "dev": "node scripts/gerar-versao.mjs && python3 -m http.server 8080",
+    "vendor": "cp node_modules/phaser/dist/phaser.min.js vendor/phaser.min.js"
+  },
+  "dependencies": {
+    "phaser": "3.90.0"
+  }
+}

@@ -4,7 +4,7 @@ Uma simulação ao vivo do escritório do **Dev**, das tirinhas [@vidadodev](htt
 
 - O relógio é o **horário de Brasília** (America/Sao_Paulo), independente do fuso de quem abre.
 - A agenda de cada dia é gerada de forma **determinística**: a semente é a data, então todo mundo vê o mesmo dia ao mesmo tempo, e cada data é diferente.
-- **v2:** planta isométrica grande (cozinha completa, banheiro fechado, open space com 12 estações, sala de reunião de vidro, lounge com sofá/TV/videogame/pufes, recepção e entrada), desenhada como tirinha de jornal: contorno preto firme, branco, pontilhado leve, sem sombra. Os bonecos são sprites (PNG transparente) que andam por corredores e portas com A*, somem no banheiro e saem pela porta da frente.
+- **v3:** a mesma planta isométrica (cozinha, banheiro fechado, open space, sala de reunião, lounge com sofá/TV/videogame, recepção e entrada), desenhada como tirinha de jornal. O motor é **Phaser 3** com câmera que acompanha o Dev, pathfinding síncrono (A* em `js/caminho.js`, porque a posição tem que ser função da hora) e oclusão pelo mapa de profundidade. Os bonecos andam pelos corredores, somem no banheiro e saem pela porta. O `cenario.json` marca **7 estações** com cadeira; o desenho do open space tem mais mesas vazias do que isso.
 - **Regra de cor:** tudo preto e branco, exceto o post-it amarelo (o **Prompt**, com carinha, só no monitor do Dev) e a caneca azul-acinzentada do Dev. O Dev é o único de camiseta preta "DE BOA".
 - A v1 (tudo em SVG feito por código) está guardada na tag git `v1`.
 
@@ -12,7 +12,7 @@ Uma simulação ao vivo do escritório do **Dev**, das tirinhas [@vidadodev](htt
 
 ```bash
 npm run dev          # gera version.json e sobe http://localhost:8080
-npm test             # valida agenda: cobertura 0–24h, determinismo, dias diferentes
+npm test             # agenda (cobertura, determinismo) e pathfinding (não atravessa parede)
 python3 scripts/screenshots.py http://localhost:8080/ '[["nome","?data=2026-10-02&hora=17:55:05&parar",1600,800]]'
 ```
 
@@ -29,16 +29,17 @@ Não tem bundler: é HTML/CSS/JS estático com ES modules. Só precisa de um ser
 | `parar` | `?parar` | congela o relógio, útil para screenshot |
 | `agenda` | `?agenda=1` | painel com a agenda do Dev no dia |
 | `sal` | `?sal=abc` | muda a semente, para ver outro sorteio da mesma data |
+| `planta` | `?planta` ou `?vista=planta` | abre vendo o andar inteiro (também a tecla `V` ou o botão "ver o andar") |
 
 Exemplos:
 - `?dia=sex&hora=17:55` é o deployzin de sexta.
 - `?data=2026-10-02&hora=19:30` é um happy hour.
 - `?hora=23:00` mostra o escritório escuro (só o post-it brilha; a janela muda com a hora).
 - `?data=2026-10-20&hora=12:45` é o almoço da turma na mesa da cozinha; `?data=2026-10-21&hora=13:30`, o videogame no sofá.
-- No celular a planta fica maior e dá para arrastar; abre centrada no Dev.
+- A câmera fica perto do Dev e passeia quando um grupo faz algo que não é trabalho (almoço, videogame, daily, banheiro). `V`, o botão ou `?planta` mostram o andar; na planta dá para arrastar e, no celular, pinçar o zoom.
 - `?dia=sab&hora=09:30` mostra a faxina de sábado.
 
-No console, `window.escritorio` expõe `agenda()`, `gerarAgenda('2026-10-30')`, `atualizarBanco()` e `checarVersao()`.
+No console, `window.escritorio` expõe `agenda()`, `agora()`, `estados()`, `gerarAgenda('2026-10-30')`, `atualizarBanco()`, `checarVersao()`, `jogo()` e `planta(true|false)`.
 
 ## Dados (editar só JSON)
 
@@ -119,11 +120,12 @@ A página foi feita para ficar aberta por dias:
    - Se a versão mudou, marca um reload pendente e recarrega num momento tranquilo: aba oculta, escritório vazio de madrugada (antes das 7h ou depois das 21h) ou fim de semana vazio.
    - Em qualquer caso, recarrega **no máximo 3 h** depois de detectar a versão nova.
 5. **Sem vazamento.**
-   - Há um único `setInterval` de 60 s para manutenção (banco, versão, reload) e um único loop rAF limitado a ~30 fps.
-   - A cena é um único `<canvas>` redesenhado a ~30 fps só quando alguém anda/fala (senão, 4 fps). Os balões (SVG) são reaproveitados por personagem; rotas A* ficam em cache e o cache é limpo a cada dia.
+   - Há um único `setInterval` de 60 s para manutenção (banco, versão, reload). O quadro é o loop do Phaser (alvo 60 fps); uma aba oculta pausa sozinha.
+   - Os sprites são um pool por personagem do elenco, e os balões são um pool fixo de 14. Rotas ficam em cache e o cache é esvaziado na virada do dia ou quando o banco muda.
    - Os fetches têm timeout de 15 s e há trava contra execução simultânea.
-   - Teste: a contagem de elementos ficou estável (~1100–1150) atravessando 12 h simuladas.
    - Erros num quadro são logados no máximo 1x/min e não derrubam o loop.
+
+A caminhada é ~102 px/s (pato 64, pombo voa em linha reta a 150). Quem "corre" no JSON fica em 156 px/s: o multiplicador 2.6 da v2 atravessava o andar num piscar de olhos. O A* é síncrono, em 8 direções, sem cortar canto, e nunca devolve uma reta através da parede. Se o destino está fechado, a pessoa para na célula andável mais próxima.
 
 ## Deploy
 
@@ -138,15 +140,19 @@ Antes de publicar, rode `npm run build` para gerar o `version.json`. Num build d
 
 ```
 index.html  css/style.css  fonts/PatrickHand.ttf
-js/main.js      loop, rotas, poses, balões, luz, HUD, atualização/versão, pan no celular
-js/cena.js      carrega arte + sprites, A* no andavel.png, desenho com oclusão por profundidade
-js/enfeites.js  relógio, janela por hora, post-it, caneca, monitor, fumaça, jogo na TV
-js/agenda.js    PRNG (mulberry32) + gerador determinístico + mescla (sem DOM)
-js/relogio.js   hora de Brasília + parâmetros da URL
-assets/         cenario.webp, profundidade.png, andavel.png, sprites/<id>/<pose>.png + indice.json
-data/*.json     elenco, ações, cenário
-arte/           folhas brutas geradas, prompts e ferramentas que produzem assets/
-scripts/        gerar-versao, testar-agenda, screenshots
+js/main.js       liga relógio, agenda e a cena; manutenção e version.json
+js/jogo.js       cena Phaser: câmera, sprites, oclusão, balões
+js/sim.js        posição e pose como função da hora
+js/caminho.js    A* síncrono sobre andavel.png
+js/decor.js      relógio, janela, post-it, caneca, monitor, pong e portas na cena
+js/enfeites.js   o desenho desses enfeites (P&B, post-it e caneca coloridos)
+js/agenda.js     PRNG (mulberry32) + gerador determinístico + mescla (sem DOM)
+js/relogio.js    hora de Brasília + parâmetros da URL
+vendor/          phaser.min.js 3.90.0 (sem bundler; `npm run vendor` recopila de node_modules)
+assets/          cenario.webp, profundidade.png, andavel.png, sprites/<id>/<pose>.png + indice.json
+data/*.json      elenco, ações, cenário
+arte/            folhas brutas, prompts e ferramentas que produzem assets/
+scripts/         gerar-versao, testar-agenda, testar-caminho, screenshots
 ```
 
 ## Como gerar a arte
@@ -166,4 +172,15 @@ python3 -m venv .venv-arte && .venv-arte/bin/pip install opencv-python-headless 
 3. **Sprites:** `python recortar.py ../bruto/dev-a.jpg /tmp/rec-dev` numera os recortes da folha (veja `contato.png`); mapeie número → pose em `arte/sprites.json` (`ref`/`alvo` controlam a escala, `corteTopo` faz o sprite de sofá, `tingir` pinta a caneca, `engrossar` engrossa o traço para combinar com o cenário). Depois `python montar.py` (também em `arte/ferramentas`) grava `assets/sprites/<id>/<pose>.png` (fundo transparente, sem halo) e `indice.json` (tamanho e ponto do pé).
 4. Ajuste `escalaBoneco` e os pontos em `data/cenario.json`, e confira com `scripts/screenshots.py`.
 
-Nomes de pose que o código procura: `em-pe`, `andar-frente-1/2`, `andar-costas-1/2`, `correndo-1/2`, `sentado-costas` (digitando, de costas na cadeira), `digitando-rapido`, `dormindo`, `sofa`, `comendo`, `falando`, `cafe`, `brinde`, `ofegante`, `varrendo`, `extintor`, `preocupada`, `sentado-prancheta`, `voando-1/2` (pombo).
+Nomes de pose que o código procura: `em-pe`, `andar-frente-1/2`, `andar-costas-1/2`, `correndo-1/2`, `sentado-costas` (digitando, de costas na cadeira), `digitando-rapido`, `dormindo`, `sofa` (cabeça e ombros; a base é esmaecida porque o recorte `corteTopo` é uma reta), `comendo`, `falando`, `cafe`, `brinde`, `ofegante`, `varrendo`, `extintor`, `preocupada`, `sentado-prancheta`, `voando` (pombo).
+
+Poses que **não existem** na arte e caem num substituto discreto (não foram inventadas):
+
+| falta | quem | o que aparece |
+|---|---|---|
+| `parado-costas` | quem assiste a TV, fila da pia, geladeira | `em-pe` (de frente; o quadro de caminhada ficava no meio do passo) |
+| `ofegante` | chegada correndo, depois de sentar | `em-pe` |
+| `correndo-1/2` | todo mundo menos o Dev | `andar-frente` |
+| `andar-costas-2` | entregador, recrutador, faxineiro | repete `andar-costas-1` |
+
+A oclusão usa `profundidade.png`: o fragmento do sprite some onde o móvel está na frente do pé. Quem senta na cadeira fica atrás do encosto. No sofá e na mesa da cozinha (lado de cá) o sprite é só a cabeça, encaixada no topo do encosto. Na sala de reunião o sprite `sentado-costas` já traz a cadeira desenhada, então não é recortado pelo mapa (o mapa marca a mesa inteira com o y da frente e apagaria a pessoa).

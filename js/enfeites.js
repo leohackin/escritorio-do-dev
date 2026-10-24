@@ -103,14 +103,20 @@ export function fumaca(ctx, [x, y], tSeg) {
   ctx.globalAlpha = 1;
 }
 
-export function tvJogo(ctx, q, tSeg) { // pong em P&B
+export function tvJogo(ctx, q, tSeg) {
+  // Pong em tinta preta. O miolo da TV é claro: branco em cima de branco sumia.
   noQuad(ctx, q, () => {
-    ctx.fillStyle = '#fff';
-    const bx = 0.5 + 0.38 * Math.sin(tSeg * 2.1), by = 0.5 + 0.32 * Math.sin(tSeg * 3.3);
-    ctx.fillRect(0.08, 0.5 + 0.3 * Math.sin(tSeg * 3.3 - 0.3) - 0.1, 0.04, 0.2);
-    ctx.fillRect(0.88, 0.5 + 0.3 * Math.sin(tSeg * 3.3 + 0.4) - 0.1, 0.04, 0.2);
-    ctx.fillRect(bx - 0.025, by - 0.03, 0.05, 0.06);
-    for (let y = 0.05; y < 0.95; y += 0.12) ctx.fillRect(0.495, y, 0.01, 0.06);
+    ctx.fillStyle = '#f7f7f5';
+    ctx.fillRect(0, 0, 1, 1);
+    ctx.strokeStyle = TINTA; ctx.lineWidth = 0.03;
+    ctx.strokeRect(0.02, 0.02, 0.96, 0.96);
+    ctx.fillStyle = TINTA;
+    const bx = 0.5 + 0.32 * Math.sin(tSeg * 2.2), by = 0.5 + 0.28 * Math.sin(tSeg * 3.1);
+    const py = (fase) => 0.5 + 0.22 * Math.sin(tSeg * 3.1 + fase) - 0.14;
+    ctx.fillRect(0.06, py(-0.45), 0.07, 0.28);
+    ctx.fillRect(0.87, py(0.55), 0.07, 0.28);
+    ctx.beginPath(); ctx.arc(bx, by, 0.075, 0, Math.PI * 2); ctx.fill();
+    for (let y = 0.1; y < 0.9; y += 0.16) ctx.fillRect(0.485, y, 0.03, 0.08);
   });
 }
 
