@@ -1,0 +1,762 @@
+{
+ "versao": 2,
+ "largura": 2560,
+ "altura": 1440,
+ "_doc": "Coordenadas no espaço da arte (2560x1440). Pontos: x,y = pé do boneco. tipo: em-pe | cadeira (mesa de trabalho, de costas) | costas (sentado de costas: só cabeça e ombros, o encosto esconde o resto) | frente (sentado de frente). olhar: 'esq' (padrão, pra baixo/esquerda) ou 'dir' (espelha). prof = profundidade usada na oclusão (padrão = y). trilho = caminho fixo do chão até o ponto (portas, sala de reunião). sumir = some ao chegar (banheiro, porta).",
+ "escalaBoneco": 0.72,
+ "velocidade": 120,
+ "mesas": [
+  {
+   "cadeira": [
+    1170,
+    590
+   ]
+  },
+  {
+   "cadeira": [
+    1375,
+    495
+   ]
+  },
+  {
+   "cadeira": [
+    1277,
+    888
+   ],
+   "tela": [
+    [
+     1205,
+     722
+    ],
+    [
+     1268,
+     704
+    ],
+    [
+     1272,
+     746
+    ],
+    [
+     1205,
+     770
+    ]
+   ],
+   "teclado": [
+    1262,
+    786
+   ],
+   "caneca": [
+    1291,
+    736
+   ],
+   "postit": [
+    [
+     1250,
+     711
+    ],
+    [
+     1266,
+     706
+    ],
+    [
+     1267,
+     722
+    ],
+    [
+     1251,
+     727
+    ]
+   ]
+  },
+  {
+   "cadeira": [
+    1510,
+    755
+   ]
+  },
+  {
+   "cadeira": [
+    1770,
+    640
+   ]
+  },
+  {
+   "cadeira": [
+    1790,
+    415
+   ]
+  },
+  {
+   "cadeira": [
+    1560,
+    410
+   ]
+  }
+ ],
+ "locais": {
+  "porta": {
+   "pontos": [
+    {
+     "x": 1925,
+     "y": 336,
+     "olhar": "esq",
+     "costas": true
+    }
+   ],
+   "trilho": [
+    [
+     1905,
+     410
+    ]
+   ],
+   "sumir": true
+  },
+  "fora": {
+   "alias": "porta"
+  },
+  "banheiro": {
+   "pontos": [
+    {
+     "x": 916,
+     "y": 726,
+     "costas": true
+    }
+   ],
+   "trilho": [
+    [
+     965,
+     790
+    ]
+   ],
+   "sumir": true
+  },
+  "recepcao": {
+   "pontos": [
+    {
+     "x": 765,
+     "y": 1185,
+     "olhar": "esq"
+    },
+    {
+     "x": 810,
+     "y": 1150,
+     "olhar": "esq"
+    }
+   ]
+  },
+  "copa": {
+   "pontos": [
+    {
+     "x": 672,
+     "y": 800,
+     "costas": true,
+     "olhar": "dir"
+    },
+    {
+     "x": 745,
+     "y": 812,
+     "olhar": "esq"
+    },
+    {
+     "x": 700,
+     "y": 860,
+     "olhar": "dir"
+    },
+    {
+     "x": 790,
+     "y": 860,
+     "olhar": "esq"
+    },
+    {
+     "x": 650,
+     "y": 905,
+     "olhar": "dir"
+    },
+    {
+     "x": 840,
+     "y": 905,
+     "olhar": "esq"
+    }
+   ]
+  },
+  "cafeteira": {
+   "pontos": [
+    {
+     "x": 672,
+     "y": 800,
+     "costas": true,
+     "olhar": "dir"
+    },
+    {
+     "x": 720,
+     "y": 845,
+     "costas": true,
+     "olhar": "dir"
+    },
+    {
+     "x": 770,
+     "y": 880,
+     "costas": true,
+     "olhar": "dir"
+    }
+   ]
+  },
+  "micro-ondas": {
+   "pontos": [
+    {
+     "x": 385,
+     "y": 700,
+     "costas": true,
+     "olhar": "esq"
+    },
+    {
+     "x": 450,
+     "y": 688,
+     "costas": true,
+     "olhar": "esq"
+    },
+    {
+     "x": 520,
+     "y": 680,
+     "costas": true,
+     "olhar": "esq"
+    },
+    {
+     "x": 585,
+     "y": 690,
+     "costas": true,
+     "olhar": "esq"
+    }
+   ]
+  },
+  "pia": {
+   "pontos": [
+    {
+     "x": 205,
+     "y": 765,
+     "costas": true,
+     "olhar": "esq"
+    }
+   ]
+  },
+  "geladeira": {
+   "pontos": [
+    {
+     "x": 505,
+     "y": 685,
+     "costas": true,
+     "olhar": "dir"
+    }
+   ]
+  },
+  "mesa-cozinha": {
+   "pontos": [
+    {
+     "x": 345,
+     "y": 790,
+     "tipo": "frente"
+    },
+    {
+     "x": 420,
+     "y": 760,
+     "tipo": "frente"
+    },
+    {
+     "x": 492,
+     "y": 733,
+     "tipo": "frente"
+    },
+    {
+     "x": 330,
+     "y": 846,
+     "tipo": "costas",
+     "prof": 1000,
+     "olhar": "dir"
+    },
+    {
+     "x": 437,
+     "y": 854,
+     "tipo": "costas",
+     "prof": 1000,
+     "olhar": "dir"
+    },
+    {
+     "x": 508,
+     "y": 826,
+     "tipo": "costas",
+     "prof": 1000,
+     "olhar": "dir"
+    },
+    {
+     "x": 575,
+     "y": 800,
+     "tipo": "costas",
+     "prof": 1000,
+     "olhar": "dir"
+    }
+   ],
+   "acesso": [
+    [
+     640,
+     960
+    ],
+    [
+     640,
+     960
+    ],
+    [
+     640,
+     960
+    ],
+    [
+     400,
+     980
+    ],
+    [
+     470,
+     990
+    ],
+    [
+     560,
+     960
+    ],
+    [
+     640,
+     920
+    ]
+   ]
+  },
+  "sofa": {
+   "pontos": [
+    {
+     "x": 1372,
+     "y": 984,
+     "tipo": "costas",
+     "prof": 1200,
+     "olhar": "dir"
+    },
+    {
+     "x": 1422,
+     "y": 1018,
+     "tipo": "costas",
+     "prof": 1200,
+     "olhar": "dir"
+    },
+    {
+     "x": 1590,
+     "y": 1075,
+     "olhar": "esq",
+     "costas": true
+    },
+    {
+     "x": 1620,
+     "y": 1112,
+     "olhar": "esq",
+     "costas": true
+    }
+   ],
+   "acesso": [
+    [
+     1300,
+     1110
+    ],
+    [
+     1390,
+     1150
+    ],
+    [
+     1560,
+     1130
+    ],
+    [
+     1600,
+     1150
+    ]
+   ]
+  },
+  "reuniao": {
+   "pontos": [
+    {
+     "x": 2030,
+     "y": 548,
+     "tipo": "costas",
+     "prof": 900,
+     "olhar": "dir"
+    },
+    {
+     "x": 2084,
+     "y": 583,
+     "tipo": "costas",
+     "prof": 900,
+     "olhar": "dir"
+    },
+    {
+     "x": 2140,
+     "y": 618,
+     "tipo": "costas",
+     "prof": 900,
+     "olhar": "dir"
+    },
+    {
+     "x": 2170,
+     "y": 495,
+     "olhar": "esq"
+    },
+    {
+     "x": 2228,
+     "y": 525,
+     "olhar": "esq"
+    },
+    {
+     "x": 2282,
+     "y": 555,
+     "olhar": "esq"
+    }
+   ],
+   "palestrante": {
+    "x": 2300,
+    "y": 625,
+    "olhar": "esq"
+   },
+   "trilho": [
+    [
+     2115,
+     735
+    ],
+    [
+     2205,
+     690
+    ],
+    [
+     2250,
+     660
+    ]
+   ]
+  },
+  "janela": {
+   "pontos": [
+    {
+     "x": 1185,
+     "y": 362,
+     "costas": true,
+     "olhar": "dir"
+    },
+    {
+     "x": 1240,
+     "y": 352,
+     "costas": true,
+     "olhar": "dir"
+    }
+   ]
+  },
+  "centro": {
+   "pontos": [
+    {
+     "x": 930,
+     "y": 1000,
+     "olhar": "esq"
+    },
+    {
+     "x": 1000,
+     "y": 1040,
+     "olhar": "esq"
+    },
+    {
+     "x": 870,
+     "y": 960,
+     "olhar": "dir"
+    },
+    {
+     "x": 1060,
+     "y": 980,
+     "olhar": "esq"
+    },
+    {
+     "x": 960,
+     "y": 930,
+     "olhar": "dir"
+    }
+   ]
+  },
+  "corredor": {
+   "pontos": [
+    {
+     "x": 1640,
+     "y": 860,
+     "olhar": "esq"
+    },
+    {
+     "x": 1000,
+     "y": 820,
+     "olhar": "esq"
+    },
+    {
+     "x": 1900,
+     "y": 520,
+     "olhar": "esq"
+    }
+   ]
+  },
+  "banheiro-fila": {
+   "pontos": [
+    {
+     "x": 985,
+     "y": 800,
+     "olhar": "esq",
+     "costas": true
+    },
+    {
+     "x": 1030,
+     "y": 825,
+     "olhar": "esq",
+     "costas": true
+    }
+   ]
+  }
+ },
+ "janela": [
+  [
+   1042,
+   222
+  ],
+  [
+   1352,
+   165
+  ],
+  [
+   1352,
+   248
+  ],
+  [
+   1050,
+   330
+  ]
+ ],
+ "relogio": {
+  "x": 1824,
+  "y": 164,
+  "rx": 13,
+  "ry": 19
+ },
+ "portas": {
+  "banheiro": [
+   [
+    878,
+    580
+   ],
+   [
+    950,
+    550
+   ],
+   [
+    953,
+    703
+   ],
+   [
+    880,
+    740
+   ]
+  ],
+  "entrada": [
+   [
+    1897,
+    177
+   ],
+   [
+    1950,
+    200
+   ],
+   [
+    1950,
+    330
+   ],
+   [
+    1898,
+    332
+   ]
+  ]
+ },
+ "tv": [
+  [
+   1564,
+   797
+  ],
+  [
+   1686,
+   872
+  ],
+  [
+   1686,
+   996
+  ],
+  [
+   1564,
+   912
+  ]
+ ],
+ "luz": {
+  "acesaAte": "19:00",
+  "minimoPessoasDepois": 2
+ },
+ "arte": {
+  "fonte": "cenario-b.jpg",
+  "sementesChao": [
+   [
+    1000,
+    1000
+   ]
+  ],
+  "sementesPlano": [
+   [
+    1850,
+    890
+   ],
+   [
+    2114,
+    644
+   ],
+   [
+    2236,
+    642
+   ],
+   [
+    2036,
+    633
+   ],
+   [
+    1980,
+    547
+   ]
+  ],
+  "sementesAndavel": [
+   [
+    1850,
+    890
+   ]
+  ],
+  "margem": 12,
+  "apagar": [
+   [
+    [
+     1279,
+     708
+    ],
+    [
+     1300,
+     708
+    ],
+    [
+     1300,
+     748
+    ],
+    [
+     1279,
+     748
+    ]
+   ],
+   [
+    [
+     1837,
+     164
+    ],
+    [
+     1836,
+     170
+    ],
+    [
+     1835,
+     176
+    ],
+    [
+     1832,
+     180
+    ],
+    [
+     1828,
+     183
+    ],
+    [
+     1824,
+     184
+    ],
+    [
+     1820,
+     183
+    ],
+    [
+     1816,
+     180
+    ],
+    [
+     1813,
+     176
+    ],
+    [
+     1812,
+     170
+    ],
+    [
+     1811,
+     164
+    ],
+    [
+     1812,
+     158
+    ],
+    [
+     1813,
+     152
+    ],
+    [
+     1816,
+     148
+    ],
+    [
+     1820,
+     145
+    ],
+    [
+     1824,
+     144
+    ],
+    [
+     1828,
+     145
+    ],
+    [
+     1832,
+     148
+    ],
+    [
+     1835,
+     152
+    ],
+    [
+     1836,
+     158
+    ]
+   ]
+  ],
+  "profundidadeFixa": [],
+  "andavelExtra": [],
+  "bloqueio": [],
+  "sementesParede": [
+   [
+    2045,
+    224
+   ],
+   [
+    1459,
+    192
+   ],
+   [
+    2428,
+    409
+   ],
+   [
+    2489,
+    534
+   ]
+  ]
+ }
+}

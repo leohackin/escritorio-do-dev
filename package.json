@@ -1,0 +1,1 @@
+{"type":"module","name":"escritorio-do-dev","private":true,"scripts":{"build":"node scripts/gerar-versao.mjs","test":"node scripts/testar-agenda.mjs","dev":"node scripts/gerar-versao.mjs && python3 -m http.server 8080"}}
