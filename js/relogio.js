@@ -19,8 +19,10 @@ const semAcento = (s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLo
 export function lerParametros(search) {
   const q = new URLSearchParams(search);
   const vel = parseFloat(q.get('vel'));
+  const vista = (q.get('vista') || '').toLowerCase();
   return { hora: q.get('hora'), dia: q.get('dia'), data: q.get('data'), vel: vel > 0 ? Math.min(vel, 3600) : 1,
-    parar: q.has('parar'), agenda: q.has('agenda'), sal: q.get('sal') || '' };
+    parar: q.has('parar'), agenda: q.has('agenda'), sal: q.get('sal') || '',
+    planta: q.has('planta') || vista === 'planta' || vista === 'andar' };
 }
 
 export function criarRelogio(par) {
